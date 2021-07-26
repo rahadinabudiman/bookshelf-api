@@ -81,7 +81,6 @@ const addBooksHandler = (request, h) => {
       response.code(200);
       return response;
     }
-   
     const response = h.response({
       status: 'fail',
       message: 'Buku tidak ditemukan',
