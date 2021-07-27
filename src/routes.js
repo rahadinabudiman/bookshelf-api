@@ -1,4 +1,4 @@
-const { addBooksHandler , getAllBooksHandler , getBooksByIdHandler, editBooksByIdHandler } = require('./handler');
+const { addBooksHandler , getAllBooksHandler , getBooksByIdHandler, editBooksByIdHandler , deleteBooksByIdHandler } = require('./handler');
 
 const routes = [
     {
@@ -22,9 +22,14 @@ const routes = [
         handler: editBooksByIdHandler,
       },
       {
+        method: 'DELETE',
+        path: '/books/{id}',
+        handler: deleteBooksByIdHandler,
+      },
+      {
         method: '*',
         path: '/{any*}',
-        handler: () => 'Halaman tidak ditemukan',
+        handler: () => 'Halaman tidak ditemukan!',
       },
   ];
    
