@@ -147,16 +147,8 @@ const addBooksHandler = (request, h) => {
   // mengubah isi buku
   const editBooksByIdHandler = (request, h) => {
     const { id } = request.params;
-    const {
-      name,
-      year,
-      author,
-      summary,
-      publisher,
-      pageCount,
-      readPage,
-      reading,
-    } = request.payload;
+    const { name, year, author, summary, publisher, pageCount, readPage, reading,} = request.payload;
+    
     if (!name) {
       const response = h.response({
         status: 'fail',
@@ -178,19 +170,7 @@ const addBooksHandler = (request, h) => {
     const updatedAt = new Date().toISOString();
     const index = books.findIndex((books) => books.id === id);
     if (index !== -1) {
-      books[index] = {
-        ...books[index],
-        name,
-        year,
-        author,
-        summary,
-        publisher,
-        pageCount,
-        readPage,
-        reading,
-        finished,
-        updatedAt,
-      };
+      books[index] = { ...books[index], name, year, author, summary, publisher, pageCount, readPage, reading, finished, updatedAt };
       const response = h.response({
         status: 'success',
         message: 'Buku berhasil diperbarui',
