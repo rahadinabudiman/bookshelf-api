@@ -12,10 +12,8 @@ const addBooksHandler = (request, h) => {
     const SaveBooks = {
       id,name, year, author, summary, publisher, updatedAt, insertedAt , pageCount, readPage, finished, reading
     };
-   
-    books.push(SaveBooks);
    // menambahkan isi buku
-    const isSuccess = books.filter((books) => books.id === id).length > 0;
+    
     if (name === undefined){
         const response = h.response({
             status: 'fail',
@@ -24,7 +22,7 @@ const addBooksHandler = (request, h) => {
           response.code(400);
           return response;
     }
-    else if(readPage > pageCount){
+    if(readPage > pageCount){
         const response = h.response({
             status: 'fail',
             message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
@@ -32,12 +30,15 @@ const addBooksHandler = (request, h) => {
           response.code(400);
           return response;
     }
-    else if (isSuccess) {
+    books.push(SaveBooks);
+    const isSuccess = books.filter((books) => books.id === id).length > 0;
+
+    if (isSuccess) {
       const response = h.response({
         status: 'success',
         message: 'Buku berhasil ditambahkan',
         data: {
-          booksId: id,
+          bookId: id,
         },
       });
       response.code(201);
@@ -52,8 +53,61 @@ const addBooksHandler = (request, h) => {
     return response;
     }
   };
-// menampilkan semua buku tapi hanya beberapa properti
+// menampilkan semua buku
   const getAllBooksHandler = (request, h) => {
+  const { name, reading, finished } = request.query;
+
+  //menampilkan semua buku dari properti nama
+    if (name) {
+      const response = h.response({
+        status: 'success',
+        data: {
+        books: books.filter((books) => books.name.toLowerCase().includes(name.toLowerCase())).map((books) => ({
+                    id: books.id,
+                    name: books.name,
+                    publisher: books.publisher,
+                })),
+            },
+          });
+        response.code(200);
+        return response;
+    }
+
+    // menampilkan semua buku dari properti reading
+    if (reading) {
+    const isReading = reading === '1';
+    const response = h.response({
+        status: 'success',
+        data: {
+            books: books.filter((books) => books.reading === isReading).map((books) => ({
+                id: books.id,
+                name: books.name,
+                publisher: books.publisher,
+                })),
+            },
+          });
+        response.code(200);
+        return response;
+    }
+
+    // menampilkan semua buku dari properti finished
+    if (finished) {
+    const isFinished = finished === '1';
+    const response = h.response({
+        status: 'success',
+        data: {
+            books: books.filter((books) => books.finished === isFinished).map((books) => ({
+                id: books.id,
+                name: books.name,
+                publisher: books.publisher,
+                })),
+            },
+          });
+        response.code(200);
+        return response;
+    }
+
+    // menampilkan semua buku hanya 3 properti
     const response = h.response({
     status: 'success',
     data: {
@@ -61,12 +115,13 @@ const addBooksHandler = (request, h) => {
             id: books.id,
             name: books.name,
             publisher: books.publisher,
-        })),
-    },
-    });
-    response.code(200);
-    return response;
-  };
+          })),
+        },
+      });
+  response.code(200);
+  return response;
+};
+
 // Menampillkan buku dari id
   const getBooksByIdHandler = (request, h) => {
     const { id } = request.params;
